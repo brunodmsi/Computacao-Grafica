@@ -54,7 +54,6 @@ void start(void) {
 
 int main(int argc, char** argv) {
 	printf("Bem-vindo ao programa que desenha uma linha no plano cartesiano\n\n");
-	printf("To start you must insert the points P1(x, y) and P2(x, y) to generate the wished line\n");
 	printf("Para começar você deve inserir os pontos P1(x, y) e P2(x, y) para gerar a linha\n");
 	printf("Tenha em mente que o programa é restringido para valores apenas entre -200 e 200.\n\n");
 
