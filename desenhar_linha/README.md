@@ -9,5 +9,5 @@ sudo apt-get install freeglut3-dev
 Depois disto você pode rodar o programa usando `./LineDrawer` ou compilando usando `gcc -o LineDrawer LineProgram.c -lglut -lGL -lGLU -lm` e depois rodar.   
 
 ## Feito por
-- Bruno De Masi
-- João Tomé - (Github)[https://github.com/joaotf]
+- [Bruno De Masi](https://github.com/brunodmsi)
+- [João Tomé](https://github.com/joaotf)
