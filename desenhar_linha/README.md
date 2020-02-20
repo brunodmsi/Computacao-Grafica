@@ -7,3 +7,7 @@ Você precisa instalar OpenGL e o GLUT (este método é para você que usa um de
 sudo apt-get install freeglut3-dev
 ```
 Depois disto você pode rodar o programa usando `./LineDrawer` ou compilando usando `gcc -o LineDrawer LineProgram.c -lglut -lGL -lGLU -lm` e depois rodar.   
+
+## Feito por
+- Bruno De Masi
+- João Tomé - (Github)[https://github.com/joaotf]
