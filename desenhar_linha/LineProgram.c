@@ -1,5 +1,81 @@
 #include <GL/glut.h>
 
+GLfloat win;
+GLfloat panX, panY;
+
+void manageKeyboard(int key, int x, int y) {
+	switch(key) {
+		case 'R':
+		case 'r':
+			win = 200.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+
+			break;
+
+		case 'W':
+		case 'w':
+			panX += 20.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+		case 's':
+		case 'S':
+			panX -= 20.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+		case 'A':
+		case 'A':
+			panX += 20.0f;
+			panY += 20.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+		case 'D':
+		case 'd':
+			panX -= 20.0f;
+			panY -= 20.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+	}
+
+	glutPostRedisplay();
+}
+
+void manageSpecialKeys(int key, int x, int y) {
+	switch(key) {
+		case GLUT_KEY_UP:
+			if (win != 20.0f) win -= 20.0f;
+			else break;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+		case GLUT_KEY_DOWN:
+			if (win != 200.0f) win += 20.0f;
+			else break;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+		case GLUT_KEY_F1:
+			win = 200.0;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;	
+	}
+
+	glutPostRedisplay();
+}
+
 void drawGrid() {
 	glColor3f(0.8f, 0.8f, 0.8f);
 	glLineWidth(1.0f);
@@ -46,9 +122,12 @@ void drawOnScreen(void) {
 
 void start(void) {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	win = 200.0f;
+	panX = 0.0f;
+	panY = 0.0f;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-200, 200, -200, 200);
+	gluOrtho2D(-win+panX, win+panX, -win+panY, win+panY);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -86,6 +165,9 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(300, 300);
 	glutCreateWindow("Desenhador de Linha");
 	glutDisplayFunc(drawOnScreen);
+	glutMouseFunc(manageMouse);
+	glutSpecialFunc(manageSpecialKeys);
+	glutKeyboardFunc(manageKeyboard);
 	start();
 	glutMainLoop();
 }
