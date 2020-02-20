@@ -1,53 +1,48 @@
+#include <stdlib.h>
 #include <GL/glut.h>
 
 GLfloat win;
 GLfloat panX, panY;
 
-void manageKeyboard(int key, int x, int y) {
-	switch(key) {
-		case 'R':
-		case 'r':
-			win = 200.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-
-			break;
-
-		case 'W':
-		case 'w':
-			panX += 20.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-			break;
-		case 's':
-		case 'S':
-			panX -= 20.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-			break;
-		case 'A':
-		case 'A':
-			panX += 20.0f;
-			panY += 20.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-			break;
-		case 'D':
-		case 'd':
-			panX -= 20.0f;
-			panY -= 20.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-			break;
+_Bool isOutOfBounds(int key) {
+	if ((win + panX == 200) && (key == 'D' || key == 'd') ||
+			(-win + panX == -200) && (key == 'A' || key == 'a') ||
+			(win + panY == 200) && (key == 'W' || key == 'w') ||
+			(-win + panY == -200) && (key == 'S' || key == 's')
+	) {
+		return 1;
+	} else {
+		return 0;
 	}
-
-	glutPostRedisplay();
 }
+
+// char testOutOfBounds() {
+// 	if (win + panX > 200 && win + panY > 200) return '+x_+y';
+// 	if (win + panX > 200 && win + panY < -200) return '+x_-y';
+// 	if (win + panX > 200 && win + panY > 200) return '+x_+y';
+// 	if (win + panX > 200 && win + panY > 200) return '+x_+y';
+// 	if (win + panX > 200 && win + panY > 200) return '+x_+y';
+// 	if (win + panX > 200 && win + panY > 200) return '+x_+y';
+
+// 	if (win + panX > 200) return '+x';
+// 	if (-win + panX < -200) return '-x';
+// 	if (win + panY > 200) return '+y';
+// 	if (-win + panY < -200) return '-y';
+
+// 	if ((win + panX > 200) ||
+// 			(-win + panX < -200) &&
+// 			(win + panY > 200)  ||
+// 			(-win + panY < -200)
+// 	) return 'x_y';
+// 	else if (
+// 			(win + panX > 200) ||
+// 			(-win + panX < -200)
+// 	) return 'x';
+// 	else if (
+// 		(win + panY > 200) ||
+// 		(-win + panY < -200)
+// 	) return 'y';
+// }
 
 void manageSpecialKeys(int key, int x, int y) {
 	switch(key) {
@@ -58,19 +53,78 @@ void manageSpecialKeys(int key, int x, int y) {
 			glLoadIdentity();
 			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
 			break;
-		case GLUT_KEY_DOWN:
-			if (win != 200.0f) win += 20.0f;
-			else break;
+
+		// case GLUT_KEY_DOWN:
+		// 	if (win != 200.0f) win += 20.0f;
+		// 	else break;
+
+		// 	if (testOutOfBounds() == '+x') {
+		// 		panX += 20.0f;
+		// 	} else if (testOutOfBounds() == '-x') 
+		// 		panX += 20.0f;
+		// 	else if (testOutOfBounds() == '+y') 
+		// 		panY -= 20.0f;	
+		// 	else if (testOutOfBounds() == '-y') 
+		// 		panY += 20.0f;		
+			
+		// 	glMatrixMode(GL_PROJECTION);
+		// 	glLoadIdentity();
+		// 	gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+		// 	break;
+	}
+
+	glutPostRedisplay();
+}
+
+void manageKeyboard(int key, int x, int y) {
+	if (isOutOfBounds(key)) return;
+
+	switch(key) {
+		case 27:
+			exit(0);
+			break;
+
+		case 'R':
+		case 'r':
+			win = 200.0f;
+			panX = 0.0f;
+			panY = 0.0f;
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
 			break;
-		case GLUT_KEY_F1:
-			win = 200.0;
+
+		case 'W':
+		case 'w':
+			panY += 10.0f;
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
-			break;	
+			break;
+
+		case 's':
+		case 'S':
+			panY -= 10.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+
+		case 'A':
+		case 'a':
+			panX -= 10.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
+
+		case 'D':
+		case 'd':
+			panX += 10.0f;
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D (-win+panX, win+panX, -win+panY, win+panY);
+			break;
 	}
 
 	glutPostRedisplay();
@@ -123,8 +177,7 @@ void drawOnScreen(void) {
 void start(void) {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	win = 200.0f;
-	panX = 0.0f;
-	panY = 0.0f;
+	panX = panY = 0;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-win+panX, win+panX, -win+panY, win+panY);
@@ -165,7 +218,6 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(300, 300);
 	glutCreateWindow("Desenhador de Linha");
 	glutDisplayFunc(drawOnScreen);
-	glutMouseFunc(manageMouse);
 	glutSpecialFunc(manageSpecialKeys);
 	glutKeyboardFunc(manageKeyboard);
 	start();
