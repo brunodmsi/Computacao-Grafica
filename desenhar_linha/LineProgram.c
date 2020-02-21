@@ -155,8 +155,8 @@ void drawGrid() {
 	glEnd();
 }
 
-int p1_x = 0, p1_y = 0;
-int p2_x = 0, p2_y = 0;
+float p1_x = 0, p1_y = 0;
+float p2_x = 0, p2_y = 0;
 void drawOnScreen(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -193,18 +193,33 @@ int main(int argc, char** argv) {
 
 	do {
 		printf("Insira P1(x) -> ");
-		scanf("%d", &p1_x);
-		printf("Insira P1(y) -> ");
-		scanf("%d", &p1_y);
-		printf("Insira P2(x) -> ");
-		scanf("%d", &p2_x);
-		printf("Insira P2(y) -> ");
-		scanf("%d", &p2_y);
+		if (scanf("%f", &p1_x) != 1) {
+			printf("Quer zoar? Fechando...\n\n");
+			exit(0);
+		}
 
-		if (p1_x > 200 || p1_x < -200 || 
-				p1_y > 200 || p1_y < -200 ||
-				p2_x > 200 || p2_x < -200 ||
-				p2_y > 200 || p2_y < -200
+		printf("Insira P1(y) -> ");
+		if (scanf("%f", &p1_y) != 1) {
+			printf("Quer zoar? Fechando...\n\n");
+			exit(0);
+		}
+
+		printf("Insira P2(x) -> ");
+		if (scanf("%f", &p2_x) != 1) {
+			printf("Quer zoar? Fechando...\n\n");
+			exit(0);
+		}
+
+		printf("Insira P2(y) -> ");
+		if (scanf("%f", &p2_y) != 1) {
+			printf("Quer zoar? Fechando...\n\n");
+			exit(0);
+		}
+
+		if (p1_x > 200.0f || p1_x < -200.0f || 
+				p1_y > 200.0f || p1_y < -200.0f ||
+				p2_x > 200.0f || p2_x < -200.0f ||
+				p2_y > 200.0f || p2_y < -200.0f
 		) {
 			printf("Os valores não podem sair do range [-200, 200]. Tente novamente.\n\n");
 		} else {
