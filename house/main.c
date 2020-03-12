@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <math.h>
 
 #define TotalPoints 12
 
 GLfloat win;
-
-float Points[TotalPoints][2] = {
+GLfloat Points[TotalPoints][2] = {
   {2, 2.5},
   {2, 4.5},
   {1, 4.5},
@@ -17,19 +17,31 @@ float Points[TotalPoints][2] = {
   {6.5, 6},
   {7.5, 4.5},
   {6.5, 4.5},
-  {6.5, 2.5}
+  {6.5, 2.5},
+	{2, 2.5}
 };
 
+void scale(int key) {
+	float scaleX = 1.05f, scaleY = 1.05f;
+
+	for (int i = 0; i < TotalPoints; i++) {
+    if (key == GLUT_KEY_UP) {
+			Points[i][0] *= scaleX;
+			Points[i][1] *= scaleY;
+		}
+
+    if (key == GLUT_KEY_DOWN) {
+			Points[i][0] /= scaleX;
+			Points[i][1] /= scaleY;
+		}
+  }
+}
+
 void manageSpecialKeys(int key, int x, int y) {
-	switch(key) {
-		case GLUT_KEY_UP:
-			if (win != 20.0f) win -= 20.0f;
-			else break;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
-	}
+	scale(key);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D (-win, win, -win, win);
 
 	glutPostRedisplay();
 }
@@ -43,52 +55,54 @@ void translate(char key) {
   }
 }
 
+void mirror(int key) {
+	for (int i = 0; i < TotalPoints; i++) {
+    if (key == '1') Points[i][0] *= -1;
+    if (key == '2') Points[i][1] *= -1;
+  }
+}
+
+void rotation(int angleRad) {
+	for (int i = 0; i < TotalPoints; i++) {
+		// glVertex2f(
+		Points[i][0] = (Points[i][0] * cos(angleRad)) - (Points[i][1] * sin(angleRad));
+		Points[i][1] = (Points[i][0] * sin(angleRad)) + (Points[i][1] * cos(angleRad));
+		// );
+  }
+}
+
+void shearing(int key) {
+	for (int i = 0; i < TotalPoints; i++) {
+    if (key == 'n') {
+			if (i == 0 || i == TotalPoints - 1) continue;
+			Points[i][0] += 2;
+		}
+
+    if (key == 'm') {
+			if (i == 0 || i == TotalPoints - 1) continue;
+			Points[i][1] += 2;
+		}
+  }
+}
+
 void manageKeyboard(int key, int x, int y) {
 	switch(key) {
 		case 27:
 			exit(0);
-			break;
+			break;		
 
-		case 'R':
-		case 'r':
-			win = 200.0f;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
+		case 'e':
+		case 'E':
+			rotation(5);
 
-		case 'W':
-		case 'w':
-      translate('w');
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
-
-		case 's':
-		case 'S':
-      translate('s');
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
-
-		case 'A':
-		case 'a':
-      translate('a');
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
-
-		case 'D':
-		case 'd':
-      translate('d');
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D (-win, win, -win, win);
-			break;
+		case 'q':
+		case 'Q':
+			rotation(-5);
 	}
+
+	translate(key);
+	mirror(key);
+	shearing(key);
 
 	glutPostRedisplay();
 }
